@@ -11,10 +11,18 @@ import (
 type report func(string, ...any)
 
 func NoError(t *testing.T, fn report, err error) {
+	NoErrorf(t, fn, err, "")
+}
+
+func NoErrorf(t *testing.T, fn report, err error, format string, args ...any) {
 	t.Helper()
 
 	if err != nil {
-		fn(fmt.Sprintf("expected no error, instead got %v", err))
+		form := fmt.Sprintf("got error %q want none instead", err)
+		if len(format) > 0 {
+			form += "\nmessage=" + format
+		}
+		fn(form, args...)
 	}
 }
 

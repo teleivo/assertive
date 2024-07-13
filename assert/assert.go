@@ -12,6 +12,12 @@ func NoError(t *testing.T, err error) {
 	report.NoError(t, t.Errorf, err)
 }
 
+func NoErrorf(t *testing.T, err error, format string, args ...any) {
+	t.Helper()
+
+	report.NoErrorf(t, t.Errorf, err, format, args...)
+}
+
 func False(t *testing.T, got bool) {
 	t.Helper()
 
