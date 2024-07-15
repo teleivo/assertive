@@ -1,5 +1,5 @@
 // Package assert contains functions marking tests as failed when expected conditions are not met by
-// calling [testing.T.Errorf]. The mismatch in expectations is logged via [testing.T].
+// calling [testing.T.Errorf]. The mismatch in expectations is logged via [testing.T.Logf].
 package assert
 
 import (
