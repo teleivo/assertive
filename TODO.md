@@ -1,3 +1,2 @@
-* add Godoc
-* add Godoc badge
-* tweak error messages/ability to adjust the message
+* fix asserting nil
+* add some No/Not versions if needed

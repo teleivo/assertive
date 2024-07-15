@@ -1,6 +1,16 @@
 # Assertive
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/teleivo/assertive.svg)](https://pkg.go.dev/github.com/teleivo/assertive)
+
 Assertive is an assertion library for writing tests in Go.
+
+It only has one dependency on https://github.com/google/go-cmp.
+
+## Install
+
+```sh
+go get -u github.com/teleivo/assertive
+```
 
 ## Disclaimer
 
