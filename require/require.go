@@ -1,3 +1,6 @@
+// Package require contains functions marking tests as failed and stops their execution when
+// expected conditions are not met by calling [testing.T.Fatalf]. The mismatch in expectations is
+// logged via [testing.T].
 package require
 
 import (
