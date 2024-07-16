@@ -100,7 +100,7 @@ func NotNil(t *testing.T, fn report, got any) {
 func NotNilf(t *testing.T, fn report, got any, format string, args ...any) {
 	t.Helper()
 
-	if got == nil {
+	if isNil(got) {
 		base := "got nil want != nil instead"
 		reportFn(t, fn, base, format, args...)
 	}

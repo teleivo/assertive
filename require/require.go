@@ -73,6 +73,22 @@ func Nilf(t *testing.T, got any, format string, args ...any) {
 	report.Nilf(t, t.Fatalf, got, format, args)
 }
 
+// NotNil expects got to be nil. The executing test will be marked as failed if the expectation is
+// not met.
+func NotNil(t *testing.T, got any) {
+	t.Helper()
+
+	report.NotNil(t, t.Fatalf, got)
+}
+
+// NotNilf expects got to be nil. The executing test will be marked as failed if the expectation is
+// not met. A message will be logged via [testing.T.Logf] with given format and args.
+func NotNilf(t *testing.T, got any, format string, args ...any) {
+	t.Helper()
+
+	report.NotNilf(t, t.Fatalf, got, format, args)
+}
+
 // Equals expects got to equal want. The executing test will be marked as failed if the expectation
 // is not met.
 func Equals(t *testing.T, got, want any) {

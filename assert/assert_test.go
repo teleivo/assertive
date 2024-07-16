@@ -12,4 +12,7 @@ func TestAssert(t *testing.T) {
 	NoErrorf(t, errors.New("error"), "failed to %q", "wow")
 
 	Nil(t, 0)
+	NotNil(t, []int{})
+	var s []int
+	NotNil(t, s)
 }
