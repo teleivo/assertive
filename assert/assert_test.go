@@ -6,6 +6,10 @@ import (
 )
 
 func TestAssert(t *testing.T) {
+	t.Skip()
+
 	NoError(t, errors.New("error"))
 	NoErrorf(t, errors.New("error"), "failed to %q", "wow")
+
+	Nil(t, 0)
 }

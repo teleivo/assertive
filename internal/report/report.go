@@ -2,6 +2,7 @@ package report
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -64,10 +65,30 @@ func Nil(t *testing.T, fn report, got any) {
 func Nilf(t *testing.T, fn report, got any, format string, args ...any) {
 	t.Helper()
 
-	if got != nil {
+	if !isNil(got) {
 		base := fmt.Sprintf("got %v want nil instead", got)
 		reportFn(t, fn, base, format, args...)
 	}
+}
+
+func isNil(got any) bool {
+	if got == nil {
+		return true
+	}
+
+	v := reflect.ValueOf(got)
+	switch v.Kind() {
+	case reflect.Chan,
+		reflect.Func,
+		reflect.Map,
+		reflect.Pointer,
+		reflect.UnsafePointer,
+		reflect.Interface,
+		reflect.Slice:
+		return v.IsNil()
+	}
+
+	return false
 }
 
 func NotNil(t *testing.T, fn report, got any) {
