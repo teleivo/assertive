@@ -15,4 +15,6 @@ func TestAssert(t *testing.T) {
 	NotNil(t, []int{})
 	var s []int
 	NotNil(t, s)
+
+	Truef(t, false, "methodCall(%d)", 10)
 }

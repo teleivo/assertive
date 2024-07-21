@@ -139,10 +139,11 @@ func EqualValuesf(t *testing.T, fn report, got, want any, format string, args ..
 func reportFn(t *testing.T, fn report, base, format string, args ...any) {
 	t.Helper()
 
-	if len(format) > 0 {
-		format = base + "\nmessage=" + format
-	} else {
-		format = base
+	if format == "" {
+		fn(base)
+		return
 	}
+
+	format = base + "\nmessage=" + format
 	fn(format, args...)
 }
