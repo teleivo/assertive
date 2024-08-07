@@ -38,7 +38,7 @@ func False(t *testing.T, got bool) {
 func Falsef(t *testing.T, got bool, format string, args ...any) {
 	t.Helper()
 
-	report.Falsef(t, t.Fatalf, got, format, args)
+	report.Falsef(t, t.Fatalf, got, format, args...)
 }
 
 // True expects got to be true. The executing test will be marked as failed if the expectation is
@@ -54,7 +54,7 @@ func True(t *testing.T, got bool) {
 func Truef(t *testing.T, got bool, format string, args ...any) {
 	t.Helper()
 
-	report.Truef(t, t.Fatalf, got, format, args)
+	report.Truef(t, t.Fatalf, got, format, args...)
 }
 
 // Nil expects got to be nil. The executing test will be marked as failed if the expectation is not
@@ -70,7 +70,7 @@ func Nil(t *testing.T, got any) {
 func Nilf(t *testing.T, got any, format string, args ...any) {
 	t.Helper()
 
-	report.Nilf(t, t.Fatalf, got, format, args)
+	report.Nilf(t, t.Fatalf, got, format, args...)
 }
 
 // NotNil expects got to be nil. The executing test will be marked as failed if the expectation is
@@ -86,7 +86,7 @@ func NotNil(t *testing.T, got any) {
 func NotNilf(t *testing.T, got any, format string, args ...any) {
 	t.Helper()
 
-	report.NotNilf(t, t.Fatalf, got, format, args)
+	report.NotNilf(t, t.Fatalf, got, format, args...)
 }
 
 // Equals expects got to equal want. The executing test will be marked as failed if the expectation
@@ -102,7 +102,7 @@ func Equals(t *testing.T, got, want any) {
 func Equalsf(t *testing.T, got, want any, format string, args ...any) {
 	t.Helper()
 
-	report.Equalsf(t, t.Fatalf, got, want, format, args)
+	report.Equalsf(t, t.Fatalf, got, want, format, args...)
 }
 
 // EqualValues expects got to be equal want. Equality is determined by calling
@@ -120,5 +120,5 @@ func EqualValues(t *testing.T, got, want any) {
 func EqualValuesf(t *testing.T, got, want any, format string, args ...any) {
 	t.Helper()
 
-	report.EqualValuesf(t, t.Fatalf, got, want, format, args)
+	report.EqualValuesf(t, t.Fatalf, got, want, format, args...)
 }
