@@ -11,63 +11,43 @@ import (
 // report notifies a user of a failed assertion. Functions like t.Errorf, t.Fatalf.
 type report func(string, ...any)
 
-func NoError(t *testing.T, fn report, err error) {
-	t.Helper()
-
-	NoErrorf(t, fn, err, "")
-}
-
-func NoErrorf(t *testing.T, fn report, err error, format string, args ...any) {
+// NoError fails if err is not nil.
+func NoError(t *testing.T, fn report, err error, msgAndArgs ...any) {
 	t.Helper()
 
 	if err != nil {
 		base := fmt.Sprintf("got error %q want none instead", err)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func False(t *testing.T, fn report, got bool) {
-	t.Helper()
-
-	Falsef(t, fn, got, "")
-}
-
-func Falsef(t *testing.T, fn report, got bool, format string, args ...any) {
+// False fails if got is not false.
+func False(t *testing.T, fn report, got bool, msgAndArgs ...any) {
 	t.Helper()
 
 	if got {
 		base := fmt.Sprintf("got %t want %t instead", got, false)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func True(t *testing.T, fn report, got bool) {
-	t.Helper()
-
-	Truef(t, fn, got, "")
-}
-
-func Truef(t *testing.T, fn report, got bool, format string, args ...any) {
+// True fails if got is not true.
+func True(t *testing.T, fn report, got bool, msgAndArgs ...any) {
 	t.Helper()
 
 	if !got {
 		base := fmt.Sprintf("got %t want %t instead", got, true)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func Nil(t *testing.T, fn report, got any) {
-	t.Helper()
-
-	Nilf(t, fn, got, "")
-}
-
-func Nilf(t *testing.T, fn report, got any, format string, args ...any) {
+// Nil fails if got is not nil.
+func Nil(t *testing.T, fn report, got any, msgAndArgs ...any) {
 	t.Helper()
 
 	if !isNil(got) {
 		base := fmt.Sprintf("got %v want nil instead", got)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
@@ -91,59 +71,52 @@ func isNil(got any) bool {
 	return false
 }
 
-func NotNil(t *testing.T, fn report, got any) {
-	t.Helper()
-
-	NotNilf(t, fn, got, "")
-}
-
-func NotNilf(t *testing.T, fn report, got any, format string, args ...any) {
+// NotNil fails if got is nil.
+func NotNil(t *testing.T, fn report, got any, msgAndArgs ...any) {
 	t.Helper()
 
 	if isNil(got) {
 		base := "got nil want != nil instead"
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func Equals[T comparable](t *testing.T, fn report, got, want T) {
-	t.Helper()
-
-	Equalsf(t, fn, got, want, "")
-}
-
-func Equalsf[T comparable](t *testing.T, fn report, got, want T, format string, args ...any) {
+// Equals fails if got != want.
+func Equals[T comparable](t *testing.T, fn report, got, want T, msgAndArgs ...any) {
 	t.Helper()
 
 	if got != want {
 		base := fmt.Sprintf("got %v want %v instead", got, want)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func EqualValues[T any](t *testing.T, fn report, got, want T) {
-	t.Helper()
-
-	EqualValuesf(t, fn, got, want, "")
-}
-
-func EqualValuesf[T any](t *testing.T, fn report, got, want T, format string, args ...any) {
+// EqualValues fails if got and want differ according to [cmp.Diff].
+func EqualValues[T any](t *testing.T, fn report, got, want T, msgAndArgs ...any) {
 	t.Helper()
 
 	if diff := cmp.Diff(want, got); diff != "" {
 		base := fmt.Sprintf("mismatch (-want +got):\n%s", diff)
-		reportFn(t, fn, base, format, args...)
+		reportMsg(t, fn, base, msgAndArgs...)
 	}
 }
 
-func reportFn(t *testing.T, fn report, base, format string, args ...any) {
+// reportMsg reports a failed assertion with an optional user message. If msgAndArgs is non-empty,
+// the first element is used as a format string and the rest as format arguments.
+func reportMsg(t *testing.T, fn report, base string, msgAndArgs ...any) {
 	t.Helper()
 
-	if format == "" {
+	if len(msgAndArgs) == 0 {
 		fn(base)
 		return
 	}
 
-	format = base + "\nmessage=" + format
-	fn(format, args...)
+	format, ok := msgAndArgs[0].(string)
+	if !ok {
+		fn(base)
+		return
+	}
+
+	msg := fmt.Sprintf(format, msgAndArgs[1:]...)
+	fn(base + "\nmessage=" + msg)
 }

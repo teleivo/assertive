@@ -1,6 +1,5 @@
-// Package require contains functions marking tests as failed and stops their execution when
-// expected conditions are not met by calling [testing.T.Fatalf]. The mismatch in expectations is
-// logged via [testing.T.Logf].
+// Package require provides test assertions that mark the test as failed and stop execution by
+// calling [testing.T.Fatalf].
 package require
 
 import (
@@ -9,116 +8,59 @@ import (
 	"github.com/teleivo/assertive/internal/report"
 )
 
-// NoError expects err to be nil. The executing test will be marked as failed if the expectation is
-// not met.
-func NoError(t *testing.T, err error) {
+// NoError expects err to be nil. An optional message can be provided as a format string followed by
+// args.
+func NoError(t *testing.T, err error, msgAndArgs ...any) {
 	t.Helper()
 
-	report.NoError(t, t.Fatalf, err)
+	report.NoError(t, t.Fatalf, err, msgAndArgs...)
 }
 
-// NoErrorf expects err to be nil. The executing test will be marked as failed if the expectation is
-// not met. A message will be logged via [testing.T.Logf] with given format and args.
-func NoErrorf(t *testing.T, err error, format string, args ...any) {
+// False expects got to be false. An optional message can be provided as a format string followed by
+// args.
+func False(t *testing.T, got bool, msgAndArgs ...any) {
 	t.Helper()
 
-	report.NoErrorf(t, t.Fatalf, err, format, args...)
+	report.False(t, t.Fatalf, got, msgAndArgs...)
 }
 
-// False expects got to be false. The executing test will be marked as failed if the expectation is
-// not met.
-func False(t *testing.T, got bool) {
+// True expects got to be true. An optional message can be provided as a format string followed by
+// args.
+func True(t *testing.T, got bool, msgAndArgs ...any) {
 	t.Helper()
 
-	report.False(t, t.Fatalf, got)
+	report.True(t, t.Fatalf, got, msgAndArgs...)
 }
 
-// Falsef expects got to be false. The executing test will be marked as failed if the expectation is
-// not met. A message will be logged via [testing.T.Logf] with given format and args.
-func Falsef(t *testing.T, got bool, format string, args ...any) {
+// Nil expects got to be nil. An optional message can be provided as a format string followed by
+// args.
+func Nil(t *testing.T, got any, msgAndArgs ...any) {
 	t.Helper()
 
-	report.Falsef(t, t.Fatalf, got, format, args...)
+	report.Nil(t, t.Fatalf, got, msgAndArgs...)
 }
 
-// True expects got to be true. The executing test will be marked as failed if the expectation is
-// not met.
-func True(t *testing.T, got bool) {
+// NotNil expects got to not be nil. An optional message can be provided as a format string followed
+// by args.
+func NotNil(t *testing.T, got any, msgAndArgs ...any) {
 	t.Helper()
 
-	report.True(t, t.Fatalf, got)
+	report.NotNil(t, t.Fatalf, got, msgAndArgs...)
 }
 
-// Truef expects got to be true. The executing test will be marked as failed if the expectation is
-// not met. A message will be logged via [testing.T.Logf] with given format and args.
-func Truef(t *testing.T, got bool, format string, args ...any) {
+// Equals expects got to equal want using the == operator. An optional message can be provided as a
+// format string followed by args.
+func Equals[T comparable](t *testing.T, got, want T, msgAndArgs ...any) {
 	t.Helper()
 
-	report.Truef(t, t.Fatalf, got, format, args...)
+	report.Equals(t, t.Fatalf, got, want, msgAndArgs...)
 }
 
-// Nil expects got to be nil. The executing test will be marked as failed if the expectation is not
-// met.
-func Nil(t *testing.T, got any) {
+// EqualValues expects got to equal want. Equality is determined using
+// [github.com/google/go-cmp/cmp.Diff]. An optional message can be provided as a format string
+// followed by args.
+func EqualValues[T any](t *testing.T, got, want T, msgAndArgs ...any) {
 	t.Helper()
 
-	report.Nil(t, t.Fatalf, got)
-}
-
-// Nilf expects got to be nil. The executing test will be marked as failed if the expectation is not
-// met. A message will be logged via [testing.T.Logf] with given format and args.
-func Nilf(t *testing.T, got any, format string, args ...any) {
-	t.Helper()
-
-	report.Nilf(t, t.Fatalf, got, format, args...)
-}
-
-// NotNil expects got to be nil. The executing test will be marked as failed if the expectation is
-// not met.
-func NotNil(t *testing.T, got any) {
-	t.Helper()
-
-	report.NotNil(t, t.Fatalf, got)
-}
-
-// NotNilf expects got to be nil. The executing test will be marked as failed if the expectation is
-// not met. A message will be logged via [testing.T.Logf] with given format and args.
-func NotNilf(t *testing.T, got any, format string, args ...any) {
-	t.Helper()
-
-	report.NotNilf(t, t.Fatalf, got, format, args...)
-}
-
-// Equals expects got to equal want. The executing test will be marked as failed if the expectation
-// is not met.
-func Equals[T comparable](t *testing.T, got, want T) {
-	t.Helper()
-
-	report.Equals(t, t.Fatalf, got, want)
-}
-
-// Equalsf expects got to equal want. The executing test will be marked as failed if the expectation
-// is not met. A message will be logged via [testing.T.Logf] with given format and args.
-func Equalsf[T comparable](t *testing.T, got, want T, format string, args ...any) {
-	t.Helper()
-
-	report.Equalsf(t, t.Fatalf, got, want, format, args...)
-}
-
-// EqualValues expects got to be equal want. Equality is determined by calling
-// [github.com/google/go-cmp/cmp.Diff]. The executing test will be marked as failed if the
-// expectation is not met.
-func EqualValues[T any](t *testing.T, got, want T) {
-	t.Helper()
-
-	report.EqualValues(t, t.Fatalf, got, want)
-}
-
-// EqualValuesf expects got to be equal want. Equality is determined by calling
-// [github.com/google/go-cmp/cmp.Diff]. The executing test will be marked as failed if the
-// expectation is not met. A message will be logged via [testing.T.Logf] with given format and args.
-func EqualValuesf[T any](t *testing.T, got, want T, format string, args ...any) {
-	t.Helper()
-
-	report.EqualValuesf(t, t.Fatalf, got, want, format, args...)
+	report.EqualValues(t, t.Fatalf, got, want, msgAndArgs...)
 }

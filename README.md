@@ -21,7 +21,7 @@ import (
 func TestExample(t *testing.T) {
 	// soft assertions - test continues on failure
 	assert.Equals(t, got, want)
-	assert.EqualValuesf(t, got, want, "comparing %q", name)
+	assert.EqualValues(t, got, want, "comparing %q", name)
 
 	// hard assertions - test stops on failure
 	require.NoError(t, err)
