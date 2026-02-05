@@ -90,7 +90,7 @@ func NotNilf(t *testing.T, got any, format string, args ...any) {
 
 // Equals expects got to equal want. The executing test will be marked as failed if the expectation
 // is not met.
-func Equals(t *testing.T, got, want any) {
+func Equals[T comparable](t *testing.T, got, want T) {
 	t.Helper()
 
 	report.Equals(t, t.Errorf, got, want)
@@ -98,7 +98,7 @@ func Equals(t *testing.T, got, want any) {
 
 // Equalsf expects got to equal want. The executing test will be marked as failed if the expectation
 // is not met. A message will be logged via [testing.T.Logf] with given format and args.
-func Equalsf(t *testing.T, got, want any, format string, args ...any) {
+func Equalsf[T comparable](t *testing.T, got, want T, format string, args ...any) {
 	t.Helper()
 
 	report.Equalsf(t, t.Errorf, got, want, format, args...)
@@ -107,16 +107,16 @@ func Equalsf(t *testing.T, got, want any, format string, args ...any) {
 // EqualValues expects got to be equal want. Equality is determined by calling
 // [github.com/google/go-cmp/cmp.Diff]. The executing test will be marked as failed if the
 // expectation is not met.
-func EqualValues(t *testing.T, got, want any) {
+func EqualValues[T any](t *testing.T, got, want T) {
 	t.Helper()
 
 	report.EqualValues(t, t.Errorf, got, want)
 }
 
-// EqualValues expects got to be equal want. Equality is determined by calling
+// EqualValuesf expects got to be equal want. Equality is determined by calling
 // [github.com/google/go-cmp/cmp.Diff]. The executing test will be marked as failed if the
 // expectation is not met. A message will be logged via [testing.T.Logf] with given format and args.
-func EqualValuesf(t *testing.T, got, want any, format string, args ...any) {
+func EqualValuesf[T any](t *testing.T, got, want T, format string, args ...any) {
 	t.Helper()
 
 	report.EqualValuesf(t, t.Errorf, got, want, format, args...)

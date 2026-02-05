@@ -106,13 +106,13 @@ func NotNilf(t *testing.T, fn report, got any, format string, args ...any) {
 	}
 }
 
-func Equals(t *testing.T, fn report, got, want any) {
+func Equals[T comparable](t *testing.T, fn report, got, want T) {
 	t.Helper()
 
 	Equalsf(t, fn, got, want, "")
 }
 
-func Equalsf(t *testing.T, fn report, got, want any, format string, args ...any) {
+func Equalsf[T comparable](t *testing.T, fn report, got, want T, format string, args ...any) {
 	t.Helper()
 
 	if got != want {
@@ -121,13 +121,13 @@ func Equalsf(t *testing.T, fn report, got, want any, format string, args ...any)
 	}
 }
 
-func EqualValues(t *testing.T, fn report, got, want any) {
+func EqualValues[T any](t *testing.T, fn report, got, want T) {
 	t.Helper()
 
 	EqualValuesf(t, fn, got, want, "")
 }
 
-func EqualValuesf(t *testing.T, fn report, got, want any, format string, args ...any) {
+func EqualValuesf[T any](t *testing.T, fn report, got, want T, format string, args ...any) {
 	t.Helper()
 
 	if diff := cmp.Diff(want, got); diff != "" {

@@ -1,20 +1,38 @@
-# Assertive
+# assertive
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/teleivo/assertive.svg)](https://pkg.go.dev/github.com/teleivo/assertive)
 
-Assertive is an assertion library for writing tests in Go.
-
-It only has one dependency on https://github.com/google/go-cmp.
+A minimal assertion library for writing tests in Go.
 
 ## Install
 
 ```sh
-go get -u github.com/teleivo/assertive
+go get github.com/teleivo/assertive
+```
+
+## Library
+
+```go
+import (
+	"github.com/teleivo/assertive/assert"
+	"github.com/teleivo/assertive/require"
+)
+
+func TestExample(t *testing.T) {
+	// soft assertions - test continues on failure
+	assert.Equals(t, got, want)
+	assert.EqualValuesf(t, got, want, "comparing %q", name)
+
+	// hard assertions - test stops on failure
+	require.NoError(t, err)
+	require.NotNil(t, result)
+}
 ```
 
 ## Disclaimer
 
-I wrote this library for my personal projects. It is thus tailored to my style of writing tests. I
-do try to stick to https://go.dev/wiki/CodeReviewComments#useful-test-failures. Feel free to use
-it! That being said, my intention is not to adjust it to someone elses liking.
+I wrote this library for my personal projects and it is provided as-is without warranty. It is
+tailored to my needs and my intention is not to adjust it to someone else's liking. Feel free to use
+it!
 
+See [LICENSE](LICENSE) for full license terms.
