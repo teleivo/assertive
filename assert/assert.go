@@ -64,3 +64,13 @@ func EqualValues[T any](t *testing.T, got, want T, msgAndArgs ...any) {
 
 	report.EqualValues(t, t.Errorf, got, want, msgAndArgs...)
 }
+
+// NoDiff expects got to equal want. When they differ, the failure message shows a line-level diff
+// in gutter format with whitespace made visible on changed lines. This is useful for comparing
+// multi-line strings like formatted code output. An optional message can be provided as a format
+// string followed by args.
+func NoDiff(t *testing.T, got, want string, msgAndArgs ...any) {
+	t.Helper()
+
+	report.NoDiff(t, t.Errorf, got, want, msgAndArgs...)
+}

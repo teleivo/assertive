@@ -1,11 +1,14 @@
 package report
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/teleivo/diff"
 )
 
 // report notifies a user of a failed assertion. Functions like t.Errorf, t.Fatalf.
@@ -99,6 +102,36 @@ func EqualValues[T any](t *testing.T, fn report, got, want T, msgAndArgs ...any)
 		base := fmt.Sprintf("mismatch (-want +got):\n%s", diff)
 		reportMsg(t, fn, base, msgAndArgs...)
 	}
+}
+
+// NoDiff fails if got and want differ. When they differ, the failure message shows a line-level
+// diff in gutter format with whitespace made visible on changed lines. The diff is computed using
+// [github.com/teleivo/diff.Lines] and rendered using [github.com/teleivo/diff.Write] with
+// [github.com/teleivo/diff.WithGutter].
+func NoDiff(t *testing.T, fn report, got, want string, msgAndArgs ...any) {
+	t.Helper()
+
+	if got == want {
+		return
+	}
+
+	var buf bytes.Buffer
+	buf.WriteString("want -  got +\n\n")
+	gotLines := readLines(got)
+	wantLines := readLines(want)
+	edits := diff.Lines(wantLines, gotLines)
+	_ = diff.Write(&buf, edits, diff.WithGutter())
+	reportMsg(t, fn, buf.String(), msgAndArgs...)
+}
+
+func readLines(s string) []string {
+	// SplitAfter keeps the delimiter on each element. Files ending in "\n"
+	// produce a trailing empty string that is not a real line.
+	lines := strings.SplitAfter(string(s), "\n")
+	if lines[len(lines)-1] == "" {
+		lines = lines[:len(lines)-1]
+	}
+	return lines
 }
 
 // reportMsg reports a failed assertion with an optional user message. If msgAndArgs is non-empty,

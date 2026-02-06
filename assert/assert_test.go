@@ -18,4 +18,9 @@ func TestAssert(t *testing.T) {
 
 	True(t, false, "methodCall(%d)", 10)
 	True(t, false, "methodCall()")
+
+	NoDiff(t,
+		"func main() {\n\tfmt.Println(\"hello\")\n}\n",
+		"func main() {\n\tfmt.Println(\"world\")\n}\n",
+	)
 }
