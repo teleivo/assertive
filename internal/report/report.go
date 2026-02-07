@@ -3,12 +3,14 @@ package report
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/teleivo/diff"
+	"golang.org/x/term"
 )
 
 // report notifies a user of a failed assertion. Functions like t.Errorf, t.Fatalf.
@@ -107,7 +109,8 @@ func EqualValues[T any](t *testing.T, fn report, got, want T, msgAndArgs ...any)
 // NoDiff fails if got and want differ. When they differ, the failure message shows a line-level
 // diff in gutter format with whitespace made visible on changed lines. The diff is computed using
 // [github.com/teleivo/diff.Lines] and rendered using [github.com/teleivo/diff.Write] with
-// [github.com/teleivo/diff.WithGutter].
+// [github.com/teleivo/diff.WithGutter]. Deletions are colored red and insertions green when
+// stdout is a terminal and the NO_COLOR environment variable is not set.
 func NoDiff(t *testing.T, fn report, got, want string, msgAndArgs ...any) {
 	t.Helper()
 
@@ -120,7 +123,12 @@ func NoDiff(t *testing.T, fn report, got, want string, msgAndArgs ...any) {
 	gotLines := readLines(got)
 	wantLines := readLines(want)
 	edits := diff.Lines(wantLines, gotLines)
-	_ = diff.Write(&buf, edits, diff.WithGutter())
+	opts := []diff.Option{diff.WithGutter()}
+	_, noColor := os.LookupEnv("NO_COLOR")
+	if !noColor && term.IsTerminal(int(os.Stdout.Fd())) {
+		opts = append(opts, diff.WithColor())
+	}
+	_ = diff.Write(&buf, edits, opts...)
 	reportMsg(t, fn, buf.String(), msgAndArgs...)
 }
 

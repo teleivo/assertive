@@ -66,9 +66,9 @@ func EqualValues[T any](t *testing.T, got, want T, msgAndArgs ...any) {
 }
 
 // NoDiff expects got to equal want. When they differ, the failure message shows a line-level diff
-// in gutter format with whitespace made visible on changed lines. This is useful for comparing
-// multi-line strings like formatted code output. An optional message can be provided as a format
-// string followed by args.
+// in gutter format with whitespace made visible on changed lines. Deletions are colored red and
+// insertions green when stdout is a terminal and the NO_COLOR environment variable is not set. An
+// optional message can be provided as a format string followed by args.
 func NoDiff(t *testing.T, got, want string, msgAndArgs ...any) {
 	t.Helper()
 
