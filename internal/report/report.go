@@ -110,7 +110,7 @@ func EqualValues[T any](t *testing.T, fn report, got, want T, msgAndArgs ...any)
 // diff in gutter format with whitespace made visible on changed lines. The diff is computed using
 // [github.com/teleivo/diff.Lines] and rendered using [github.com/teleivo/diff.Write] with
 // [github.com/teleivo/diff.WithGutter]. Deletions are colored red and insertions green when
-// stdout is a terminal and the NO_COLOR environment variable is not set.
+// stderr is a terminal and the NO_COLOR environment variable is not set.
 func NoDiff(t *testing.T, fn report, got, want string, msgAndArgs ...any) {
 	t.Helper()
 
@@ -125,7 +125,8 @@ func NoDiff(t *testing.T, fn report, got, want string, msgAndArgs ...any) {
 	edits := diff.Lines(wantLines, gotLines)
 	opts := []diff.Option{diff.WithGutter()}
 	_, noColor := os.LookupEnv("NO_COLOR")
-	if !noColor && term.IsTerminal(int(os.Stdout.Fd())) {
+	// Check stderr as go test captures stdout via a pipe, making it a non-terminal.
+	if !noColor && term.IsTerminal(int(os.Stderr.Fd())) {
 		opts = append(opts, diff.WithColor())
 	}
 	_ = diff.Write(&buf, edits, opts...)
